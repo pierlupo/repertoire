@@ -3,7 +3,7 @@ import { useRef } from "react"
 const ContactForm = (props) => {
   const contact = props.contact
 
-  console.log(contact);
+  //console.log(contact);
   
   const nameRef = useRef()
   const firstnameRef = useRef()
@@ -79,7 +79,8 @@ const ContactForm = (props) => {
         </div>
         <div className="mb-3">
           <label htmlFor="tel" className="form-label">Téléphone: </label>
-          <input type="tel" pattern="[0-9]{2}/[0-9]{2}/[0-9]{2}/[0-9]{2}/[0-9]{2}" required id="tel" ref={telRef} className="form-control" defaultValue={contact?.tel} />
+          <input type="tel" required id="tel" ref={telRef} className="form-control" defaultValue={contact?.tel} />
+          {/* pattern="[0-9]{2}/[0-9]{2}/[0-9]{2}/[0-9]{2}/[0-9]{2}" */}
         </div> 
         <div className="mb-3">
           <label htmlFor="avatar" className="form-label">Avatar: </label>

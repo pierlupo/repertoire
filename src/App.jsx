@@ -211,7 +211,7 @@ const App = () => {
       <button onClick={() =>setModalFormMode("")} className="btn btn-outline-light rounded-circle  mx-auto"><i className="bi bi-x"></i></button>
       </div>
       <hr />
-          <ContactForm mode="add" />
+          <ContactForm mode="add" addContact={addContactHandler} contact={selectedContact}/>
         </div>
       </div>
       </ModalComponent>, document.getElementById("modal-root"))}
@@ -266,7 +266,7 @@ const App = () => {
         <div className="bg-dark text-light rounded p-3">
           <div className="d-flex justify-content-between align-items-center">
           <h1>Rep_App</h1>
-          <div><button className="btn btn-outline-success me-2"  onClick={() =>setSelectedContactAndFormMode({mode: "add"})} ><i className="bi bi-pencil"></i> Ajouter un contact</button></div>
+          <div><button className="btn btn-outline-success me-2"  onClick={() =>setSelectedContactAndFormMode({mode:"add"})} ><i className="bi bi-pencil"></i> Ajouter un contact</button></div>
           </div>
           <hr />
           {contacts.length === 0 ? 
