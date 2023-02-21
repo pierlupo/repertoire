@@ -1,4 +1,4 @@
-import MyButton from "./shared/MyButton"
+import MyButton from "../shared/MyButton"
 
 const NavBar = (props) => {
     // const navbar = props.navbar
@@ -7,7 +7,7 @@ const NavBar = (props) => {
     return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark ">
     <div className="container-fluid">
-    <a className="navbar-brand" href="#">RepApp</a>
+    <a className="navbar-brand" href="#">Rep_App</a>
     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span className="navbar-toggler-icon"></span>
     </button>

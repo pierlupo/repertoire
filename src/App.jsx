@@ -5,11 +5,11 @@ import { API_KEY } from "./apiKey";
 import ContactForm from "./components/ContactForm";
 import ContactDisplay from "./components/ContactDisplay";
 import NavBar from "./components/navbar";
-import MyButton from "./components/shared/MyButton";
+import MyButton from "./shared/MyButton";
 const App = () => {
 
   const [modalVisible, setModalVisible] = useState(false)
-  const [modalFormVisible, setModalFormVisible] = useState(false)
+  const [modalFormMode, setModalFormMode] = useState("")
   const [isLogging, setIsLogging] = useState(false)
   const [isLogged, setIsLogged] = useState(false)
 
@@ -17,6 +17,7 @@ const App = () => {
   const passwordRef = useRef()
 
   const [contacts, setContacts] = useState([])
+  const [selectedContact, setSelectedContact] = useState(null)
 
   const BASE_DB_URL = "https://repertoire-bb645-default-rtdb.europe-west1.firebasedatabase.app/"
 
@@ -119,7 +120,7 @@ const App = () => {
     refreshContacts()
   }, [])
 
-
+  
   const deleteContactHandler = async (contactId) => {
       if(window.confirm("Etes-vous sûr ?")) {
       const contactFound = contacts.find(contact => contact.id === contactId)
@@ -155,13 +156,92 @@ const App = () => {
     setIsLogged(false)
   }
 
+  const setSelectedContactAndFormMode = ({contactId, mode}) => {
+    console.log(contacts);
+    const foundContact = contacts.find(c => c.id === contactId)
+    setSelectedContact(foundContact)
+    setModalFormMode(mode)
+  }
+
+  const editContactHandler = async (contact) => {
+    if(window.confirm("Etes-vous sûr ?")) {
+      const {id: contactId, ...values} = contact
+      const contactFound = contacts.find(contact => contact.id === contactId)
+    if (contactFound) {
+      try {
+        const token = localStorage.getItem('token')
+        const newContactValues = {
+          ...values
+        }
+        
+        if (token) {
+          const response = await fetch(`${BASE_DB_URL}contacts/${contactId}.json?auth=${token}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newContactValues)
+          })
+          
+  
+          if (!response.ok) {
+            throw new Error("Erreur lors de la requête PATCH !")
+          }
+  
+          const data = await response.json()
+  
+          console.log(data);
+  
+          setContacts([...contacts.filter(contact => contact !== contactFound), newContactValues])
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+  
+    }
+  }
+  }
+
   return (
     <>
-    <NavBar><button className="btn btn-primary" onClick={() => isLogged ? logOutHandler() : setModalVisible(true)}>{isLogged ? 'Log Out' : 'Connexion'}</button></NavBar>
+    {modalFormMode === "add" && createPortal(<ModalComponent closeModal={() => setModalFormMode("")}>
+    <div className="col-8 mx-auto text-center">
+        <div className="bg-dark text-light rounded p-3">
+        <div className="d-flex justify-content-between align-items center ">
+      <button onClick={() =>setModalFormMode("")} className="btn btn-outline-light rounded-circle  mx-auto"><i className="bi bi-x"></i></button>
+      </div>
+      <hr />
+          <ContactForm mode="add" />
+        </div>
+      </div>
+      </ModalComponent>, document.getElementById("modal-root"))}
+    {modalFormMode === "edit" && createPortal(<ModalComponent closeModal={() => setModalFormMode("")}>
+    <div className="col-8 mx-auto text-center">
+        <div className="bg-dark text-light rounded p-3">
+        <div className="d-flex justify-content-between align-items center ">
+      <button onClick={() =>setModalFormMode("")} className="btn btn-outline-light rounded-circle  mx-auto"><i className="bi bi-x"></i></button>
+      </div>
+      <hr />
+          <ContactForm mode="edit" editContact={editContactHandler} contact={selectedContact} />
+        </div>
+      </div>
+      </ModalComponent>, document.getElementById("modal-root"))}
+    {modalFormMode === "delete" && createPortal(<ModalComponent closeModal={() => setModalFormMode("")}>
+    <div className="col-8 mx-auto text-center">
+        <div className="bg-dark text-light rounded p-3">
+        <div className="d-flex justify-content-between align-items center ">
+      <button onClick={() =>setModalFormMode("")} className="btn btn-outline-light rounded-circle  mx-auto"><i className="bi bi-x"></i></button>
+      </div>
+      <hr />
+          <ContactForm mode="delete" contact={selectedContact} deleteContact={deleteContactHandler} />
+        </div>
+      </div>
+      </ModalComponent>, document.getElementById("modal-root"))}
+    <NavBar><button className="btn btn-primary" onClick={() => isLogged ? logOutHandler() : setModalVisible(true)}>{isLogged ? 'Déconnexion' : 'Connexion'}</button></NavBar>
     {modalVisible && createPortal(<ModalComponent closeModal={() => setModalVisible(false)}>
       
       <div className="d-flex justify-content-between align-items center">
-      <h3>{isLogging ? 'Sign In' : 'Sign Up'}</h3>
+      <h3>{isLogging ? 'Se connecter' : "S'inscrire"}</h3>
       <button onClick={() =>setModalVisible(false)} className="btn btn-outline-dark rounded-circle"><i className="bi bi-x"></i></button>
       </div>
       <hr />
@@ -175,37 +255,23 @@ const App = () => {
           <input type="password" required ref={passwordRef} className="form-control" />
         </div>
         <div className="text-end">
-          <button type="button" className="btn btn-outline-info me-2" onClick={() => setIsLogging(!isLogging)}>Switch to {isLogging ? 'Sign Up' : 'Sign In'}</button>
-          <button className="btn btn-primary">{isLogging ? 'Sign In' : 'Sign Up'}</button>
+          <button type="button" className="btn btn-outline-info me-2" onClick={() => setIsLogging(!isLogging)}>Switch to {isLogging ? "S'inscrire" : 'Se connecter'}</button>
+          <button className="btn btn-primary">{isLogging ? 'Se connecter' : "S'inscrire"}</button>
         </div>
       </form>
     </ModalComponent>, document.getElementById("modal-root"))}
-
-    {modalFormVisible && createPortal(<ModalComponent closeModal={() => setModalFormVisible(false)}>
-
-      <div className="col-8 mx-auto text-center">
-        <div className="bg-dark text-light rounded p-3">
-        <div className="d-flex justify-content-between align-items center ">
-      <button onClick={() =>setModalFormVisible(false)} className="btn btn-outline-light rounded-circle  mx-auto"><i className="bi bi-x"></i></button>
-      </div>
-      <hr />
-          <ContactForm addContact={addContactHandler} />
-        </div>
-      </div>
-      
-      </ ModalComponent>, document.getElementById("modal-root"))}
       <div className="container">
     <div className="row g-2 py-3">
       <div className="col-8">
         <div className="bg-dark text-light rounded p-3">
           <div className="d-flex justify-content-between align-items-center">
-          <h1>RepApp</h1>
-          <div><button className="btn btn-outline-success me-2"  onClick={() =>setModalFormVisible(true)} ><i className="bi bi-pencil"></i> Ajouter un contact</button></div>
+          <h1>Rep_App</h1>
+          <div><button className="btn btn-outline-success me-2"  onClick={() =>setSelectedContactAndFormMode({mode: "add"})} ><i className="bi bi-pencil"></i> Ajouter un contact</button></div>
           </div>
           <hr />
           {contacts.length === 0 ? 
             <p>Il n'y a pas de contacts dans la base de données !</p> : 
-             sortedContacts().map(contact => <ContactDisplay key={contact.id} contact={contact} deleteContact={deleteContactHandler} />)}
+            sortedContacts().map(contact => <ContactDisplay key={contact.id} contact={contact} contacts={sortedContacts()} deleteContact={deleteContactHandler} setSelectedContactAndFormMode={setSelectedContactAndFormMode}/>)}
         </div>
       </div>
     </div>
