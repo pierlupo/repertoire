@@ -8,7 +8,7 @@ const ContactForm = (props) => {
   const nameRef = useRef()
   const firstnameRef = useRef()
   const birthdateRef = useRef()
-  const ageRef = useRef()
+ // const ageRef = useRef()
   const emailRef = useRef()
   const telRef = useRef()
   const avatarRef = useRef()
@@ -19,7 +19,7 @@ const ContactForm = (props) => {
     const name = nameRef.current.value
     const firstname = firstnameRef.current.value
     const birthdate = birthdateRef.current.value
-    const age = ageRef.current.value
+  //  const age = ageRef.current.value
     const email = emailRef.current.value
     const tel = telRef.current.value
     const avatar = avatarRef.current.value
@@ -28,7 +28,7 @@ const ContactForm = (props) => {
         name,
         firstname,
         birthdate,
-        age,
+  //      age,
         email,
         tel,
         avatar
@@ -37,7 +37,7 @@ const ContactForm = (props) => {
     nameRef.current.value = ""
     firstnameRef.current.value = ""
     birthdateRef.current.value = ""
-    ageRef.current.value = ""
+  //  ageRef.current.value = ""
     emailRef.current.value = ""
     telRef.current.value = ""
     avatarRef.current.value = ""
@@ -63,28 +63,28 @@ const ContactForm = (props) => {
         </div>
         <div className="mb-3">
           <label htmlFor="firstname" className="form-label">Prénom: </label>
-          <input type="text" required id="firstname" ref={firstnameRef} className="form-control" defaultValue={contact?.firstname} />
+          <input type="text" disabled={props.mode === "delete"} required={props.mode !== "delete"} id="firstname" ref={firstnameRef} className="form-control" defaultValue={contact?.firstname} />
         </div>
         <div className="mb-3">
           <label htmlFor="birthdate" className="form-label">Date de naissance: </label>
-          <input type="date" required id="birthdate" ref={birthdateRef} className="form-control" defaultValue={contact?.birthdate} />
+          <input type="date" disabled={props.mode === "delete"} required={props.mode !== "delete"} id="birthdate" ref={birthdateRef} className="form-control" defaultValue={contact?.birthdate} />
         </div>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label htmlFor="age" className="form-label">Âge: </label>
           <input type="number" required id="age" ref={ageRef} className="form-control" defaultValue={contact?.age} />
-        </div>
+        </div> */}
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email: </label>
-          <input type="email" required id="email" ref={emailRef} className="form-control" defaultValue={contact?.email} />
+          <input type="email" disabled={props.mode === "delete"} required={props.mode !== "delete"} id="email" ref={emailRef} className="form-control" defaultValue={contact?.email} />
         </div>
         <div className="mb-3">
           <label htmlFor="tel" className="form-label">Téléphone: </label>
-          <input type="tel" required id="tel" ref={telRef} className="form-control" defaultValue={contact?.tel} />
+          <input type="tel" disabled={props.mode === "delete"} required={props.mode !== "delete"} id="tel" ref={telRef} className="form-control" defaultValue={contact?.tel} />
           {/* pattern="[0-9]{2}/[0-9]{2}/[0-9]{2}/[0-9]{2}/[0-9]{2}" */}
         </div> 
         <div className="mb-3">
-          <label htmlFor="avatar" className="form-label">Avatar: </label>
-          <input type="text" required id="avatar" ref={avatarRef} className="form-control" defaultValue={contact?.avatar} />
+          <label htmlFor="avatar" className="form-label">URL de l'avatar: </label>
+          <input type="text" disabled={props.mode === "delete"} required={props.mode !== "delete"} id="avatar" ref={avatarRef} className="form-control" defaultValue={contact?.avatar} />
         </div>
         <div className="mx-auto">
           <button className="btn btn-outline-light"><i className="bi bi-send"></i> Envoyer</button>

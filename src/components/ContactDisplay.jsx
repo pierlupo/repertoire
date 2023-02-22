@@ -2,7 +2,20 @@ import "../index.css"
 
 const ContactDisplay = (props) => {
   const contact = props.contact
+  const isLogged = props.isLogged
   let avatarURL = contact.avatar
+
+  // const getContactAge = () => {
+  //   const today = new Date()
+  //   const todayCopy = new Date()
+  //   const birthDate = new Date(contact.birthDate)
+  //   todayCopy.setFullYear(birthDate.getFullYear())
+  //   if (todayCopy > birthDate){
+  //     return today.getFullYear() - birthDate.getFullYear() - 1
+  //   } else {
+  //     return today.getFullYear() - birthDate.getFullYear
+  //   }
+  // }
   
     return (
       <>
@@ -12,7 +25,8 @@ const ContactDisplay = (props) => {
           <h5>{contact.firstname} {contact.name}</h5>
           <ul>
             <li>{contact.birthdate}</li>
-            <li>{contact.age} ans</li>
+            {/* <li>{contact.age} ans</li> */}
+            {/* <li>{getContactAge()} ans</li> */}
             <li>{contact.email}</li>
             <li>{contact.tel}</li>
           </ul>
@@ -24,8 +38,8 @@ const ContactDisplay = (props) => {
           <hr />
         <div className="d-flex justify-content-between align-items-center">
           
-          <button className="btn btn-warning" onClick={() => props.setSelectedContactAndFormMode({contactId: contact.id, mode: "edit"})}><i className="bi bi-trash"></i>Edit</button>
-          <button className="btn btn-danger" onClick={() => props.setSelectedContactAndFormMode({contactId: contact.id, mode: "delete"})}><i className="bi bi-trash"></i>Delete</button>
+          {isLogged &&<button className="btn btn-warning" onClick={() => props.setSelectedContactAndFormMode({contactId: contact.id, mode: "edit"})}><i className="bi bi-trash"></i>Edit</button>}
+          {isLogged &&<button className="btn btn-danger" onClick={() => props.setSelectedContactAndFormMode({contactId: contact.id, mode: "delete"})}><i className="bi bi-trash"></i>Delete</button>}
         </div>
       </div>
       </>
