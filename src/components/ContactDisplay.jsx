@@ -1,4 +1,5 @@
 import "../index.css";
+import MyButton from "../shared/MyButton";
 
 const ContactDisplay = (props) => {
   const contact = props.contact;
